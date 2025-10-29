@@ -1,0 +1,12 @@
+name: "Chenhao Zheng"
+output_dir: "."
+
+navbar:
+  title: "Chenhao Zheng"
+  right:
+    - text: "Home"
+      href: index.html
+
+output:
+  html_document:
+    theme: cerulean

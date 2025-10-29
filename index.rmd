@@ -12,9 +12,10 @@ library(flexdashboard)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# This is Chenhao's Website!
 ## Introduction
-My name is CHnehao Zheng. I'm a international student and studying in the Columbia University Mailman public health school. I'm doing the Biostatistics. I used to study the Math and Statistics in the Rutgers, The State University of New Jersey. Welcome to my personal Website!! Here is my information and CV.
+<img src="Chenhao.jpg" alt="This is my photo!" width="200px">
+
+My name is Chenhao Zheng. I'm a international student from China and now studying in the Columbia University Mailman public health school. I'm doing the Biostatistics. I used to study the Math and Statistics in the Rutgers, The State University of New Jersey. Welcome to my personal Website!! Here is my information and CV.
 
 -Email(personal): <zch1729884678@gmail.com>
 
