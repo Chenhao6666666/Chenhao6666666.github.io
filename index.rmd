@@ -17,14 +17,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 My name is Chenhao Zheng. I'm a international student from China and now studying in the Columbia University Mailman public health school. I'm doing the Biostatistics. I used to study the Math and Statistics in the Rutgers, The State University of New Jersey. Welcome to my personal Website!! Here is my information and CV.
 
+### My Email
 -Email(personal): <zch1729884678@gmail.com>
 
 -Email(acadamic): <cz2955@cumc.columbia.edu>
 
+### My Github
 -[Chenhao's GitHub](https://github.com/Chenhao6666666)
 
+### My CV
 -[Download my CV (PDF)](https://raw.githubusercontent.com/Chenhao6666666/Chenhao6666666.github.io/main/Personal_CV.pdf)
-
 
 
 

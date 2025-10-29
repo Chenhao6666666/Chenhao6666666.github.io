@@ -1,0 +1,134 @@
+---
+title: "RIR"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+date: "2025-10-29"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+library(dplyr)
+library(stringr)
+library(httr)
+library(ggplot2)
+library(jsonlite)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+get_all_inspections = function(url) {
+  
+  all_inspections = vector("list", length = 0)
+  
+  loop_index = 1
+  chunk_size = 50000
+  DO_NEXT = TRUE
+  
+  while (DO_NEXT) {
+    message("Getting data, page ", loop_index)
+    
+    all_inspections[[loop_index]] = 
+      GET(url,
+          query = list(`$order` = "zipcode",
+                       `$limit` = chunk_size,
+                       `$offset` = as.integer((loop_index - 1) * chunk_size)
+                       )
+          ) %>%
+      content("text") %>%
+      fromJSON() %>%
+      as_tibble()
+    
+    DO_NEXT = dim(all_inspections[[loop_index]])[1] == chunk_size
+    loop_index = loop_index + 1
+  }
+  
+  all_inspections
+  
+}
+
+url = "https://data.cityofnewyork.us/resource/43nn-pn8j.json"
+
+nyc_inspections <- 
+  get_all_inspections(url) %>%
+  bind_rows() 
+nyc_clean = nyc_inspections %>%
+  filter(!is.na(score), !is.na(cuisine_description), !is.na(boro)) %>%
+  mutate(score = as.numeric(score)) %>%
+  filter(score > 0 & score < 60)
+
+set.seed(123)
+nyc_sample = sample_n(nyc_clean, 2000)
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+nyc_sample %>%
+filter(cuisine_description %in% c("American", "Chinese", "Italian", "Mexican", "Japanese")) %>%
+plot_ly(
+x = ~cuisine_description,
+y = ~score,
+type = "box",
+color = ~cuisine_description
+) %>%
+layout(
+title = "Inspection Scores by Cuisine Type",
+xaxis = list(title = "Cuisine"),
+yaxis = list(title = "Inspection Score (lower is better)")
+)
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+plot_ly(
+nyc_sample,
+x = ~score,
+type = "histogram",
+nbinsx = 30,
+marker = list(color = "steelblue")
+) %>%
+layout(
+title = "Distribution of Restaurant Inspection Scores",
+xaxis = list(title = "Score"),
+yaxis = list(title = "Count")
+)
+
+```
+
+### Chart C
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+nyc_sample %>%
+mutate(text_label = str_c("Name: ", dba, "<br>Score: ", score, "<br>Cuisine: ", cuisine_description)) %>%
+plot_ly(
+x = ~zipcode,
+y = ~score,
+type = "scatter",
+mode = "markers",
+color = ~boro,
+text = ~text_label,
+hoverinfo = "text",
+alpha = 0.6
+) %>%
+layout(
+title = "Restaurant Score vs Zipcode by Borough",
+xaxis = list(title = "Zipcode"),
+yaxis = list(title = "Score")
+)
+
+```
+
+
